@@ -325,4 +325,132 @@ Với `if(i <= j)` khi chạy ngược về điều kiện while ban đầu, nó
 
 Vậy các điều kiện trong code mẫu đều là điều kiện chuẩn.
 
+
+## Complexity
+
+### Time
+
+| Complexity | Big-O | Explanation |
+|------------|-------|-------------|
+| Best case | O(nlogn) | The pivot divides the array into two equal halves. |
+| Worst case | O(n^2) | The largest or smallest value is always chosen as the pivot. |
+| Average case | O(n^2) | The array divides the array into two halves, but not necessarily equal. |
+
+### Space
+
+* Worst-case scenario: O(n) due to unbalanced partitioning leading to a skewed recursion tree requiring a call stack of size O(n).
+
+* Best-case scenario: O(log n) as a result of balanced partitioning leading to a balanced recursion tree with a call stack of size O(log n).
+
+Source: [GeeksForGeeks](https://www.geeksforgeeks.org/dsa/quick-sort-algorithm/#:~:text=8%209%2010-,Complexity%20Analysis,-Time%20Complexity%3A)
+
 ---
+
+# Merge sort
+
+## Top-down (recursive)
+
+Từ một mảng lớn, ta gọi đệ quy chia mảng ra làm đôi. Chia như thế cho đến khi còn 1 phần tử trong mảng.
+
+Sau đó, thực hiện so sánh phần tử của 2 mảng nhỏ, thêm vào mảng temp, rồi dần dần ghép vào mảng chính.
+
+```cpp
+//Ascending
+//left = 0, right = arr.size() - 1
+void topDownMerge(vector<int>& arr, int left, int right)
+{
+	if(left >= right) return;
+	int mid = left + (right - left)/2;
+
+	topDownMerge(arr, left, mid);
+	topDownMerge(arr, mid+1, right);
+
+	myMerge(arr, left, mid ,right);
+}
+
+void myMerge(vector<int>& arr, int left, int mid, int right)
+{
+	vector<int> leftArr;
+	vector<int> rightArr;
+	
+	int i = 0;
+	for(; i<mid+1, ++i)
+	{
+		leftArr.push_back(arr[i]);
+	}
+
+	for(; i<right+1; ++i)
+	{
+		rightArr.push_back(arr[i]);
+	}
+
+	int leftInd = 0, rightInd = 0;
+	i = left;
+	while(leftInd < leftArr.size() && rightInd < rightArr.size())
+	{
+		if(leftArr[leftInd] < rightArr[rightInd])
+		{
+			arr[i] = leftArr[leftInd];
+			++i; ++leftInd;
+		}
+		else{
+			arr[i] = rightArr[rightInd];
+			++i; ++rightInd;
+		}
+	}
+
+	for(leftInd < leftArr.size()){
+		arr[i] = leftArr[leftInd];
+		++i; ++leftInd;
+	}
+
+	for(rightInd < rightArr.size()){
+		arr[i] = rightArr[rightInd];
+		++i; ++rightInd;
+	}
+}
+```
+
+## Bottom-up (iterative)
+
+Chia mảng ra thành N mảng, rồi ghép dần dần với nhau theo window size.
+
+Hàm merge tương tự với recursive.
+
+```cpp
+void iterativeMerge(vector<int>& arr)
+{
+	int n = arr.size();
+
+	for(int windSize = 1; windSize < n; windSize *= 2)
+	{
+		//Do not iterate the last element, since there's nothing to merge behind
+		for(int left = 0; left < n - 1; left += windSize * 2)
+		{
+			int mid = min(left + windSize - 1, n - 1);
+			int right = min(left + windSize*2 - 1, n - 1);
+
+			//myMerge func is the same as the one in recursive version
+			myMerge(arr, left, mid, right);
+		}
+	}
+}
+```
+
+## Complexity
+
+Time: Cả 2 phiên bản đều có độ phức tạp thời gian như nhau, ở cả 3 cases: O(N * log(N))
+
+- Mỗi lần đệ quy đều chia đôi mảng ra, vậy nên số tầng đệ quy là log2(N)
+
+- Mỗi tầng đều tốn N chi phí để ghép
+
+1 mảng N => Tốn N, 2 mảng N/2 => Tốn 2 * N/2 = N, 4 mảng N/4 => Tốn 4 * N/4 = N,...
+
+Space: 
+
+- Recursive: O(d), với d là độ sâu tầng đệ quy. Mỗi lần gọi lại hàm, ta lại phải tốn thêm chi phí lưu stack frame.
+
+---
+
+# 
