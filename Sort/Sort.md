@@ -319,7 +319,7 @@ Swap với chính nó, rồi giảm j và tăng i.
 
 Không chạy, do i == j. i và j giữ nguyên. 
 
-Với `if(i < j)` khi chạy ngược về điều kiện while ban đầu, nó sẽ thỏa mãn, nhưng bản thân i và j sẽ không hề thay đổi nếu tiếp tục xét các điều kiện bên trong vòng lặp ấy.
+Với `if(i <= j)` khi chạy ngược về điều kiện while ban đầu, nó sẽ thỏa mãn, nhưng bản thân i và j sẽ không hề thay đổi nếu tiếp tục xét các điều kiện bên trong vòng lặp ấy.
 
 => Lặp vô tận.
 
