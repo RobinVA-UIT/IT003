@@ -453,4 +453,88 @@ Space:
 
 ---
 
-# 
+# Heap sort
+
+**B1**: Build heap mảng sao cho tuân theo max heap (sắp xếp tăng dần) hoặc min heap (giảm dần), bằng cách heapify cả mảng.
+
+**B2**: Đẩy phần tử ở i = 0 về boundary, với boundary ban đầu = N - 1.
+
+**B3**: Heapify ở i = 0.
+
+**B4**: Giảm boundary xuống 1 đơn vị, i++.
+
+Lặp từ bước 2 đến bước 4 tổng cộng N/2 - 1 lần, vì node ở N/2 - 1 là node cuối có con trong heap.
+
+## Heapify
+
+### Max heap
+- Là cây nhị phân hoàn chỉnh (complete binary tree).
+
+- Giá trị của một node bất kỳ trên cây sẽ luôn lớn hơn hoặc bằng giá trị của các node con của nó (nếu có).
+
+### Max heap
+- Cũng là cây nhị phân hoàn chỉnh.
+
+- Giá trị của một node bất kỳ trên cây sẽ luôn nhỏ hơn hoặc bằng giá trị của các node con của nó (nếu có).
+
+### Bản chất
+
+Lấy ví dụ khi sắp xếp tăng dần. 
+
+Khi ta build max heap, các số ở càng gần gốc cây nhị phân thì giá trị sẽ càng cao. Vì thế, ta đẩy chúng về cuối mảng.
+
+==> Luôn đảm bảo phần tử ở cuối là phần tử lớn nhất.
+
+Ở mỗi lần swap thành công, ta giảm boundary đi 1 để không can thiệp vào phần tử lớn nhất đã sort ở cuối. Nhờ bước này, phần tử ở i = 0 sẽ luôn là phần tử lớn nhất trong phần unsorted của mảng.
+
+## Code
+
+```cpp
+//Ascending
+void heap_sort(vector<int>& arr)
+{
+	//Build max heap
+	for(int i = arr.size()/2 - 1; i > -1; --i)
+	{
+		maxHeapify(arr, i, 2*i + 1, 2*i + 2, arr.size());
+	}
+
+	//Swap 
+	for(int boundary = arr.size() - 1; boundary > 0; --boundary)
+	{
+		swap(arr[boundary], arr[0]);
+
+		maxHeapify(arr, 0, 1, 2, boundary + 1);
+	}
+}
+
+void maxHeapify(vector<int>& arr, int root, int left, int right, int heapSize)
+{
+	if(left >= root) return;
+
+	int maxInd = root;
+
+	if(arr[left] > arr[maxInd]) maxInd = left;
+
+	if(right < heapSize)
+	{
+		if(arr[right] > arr[maxInd]) maxInd = right;
+	}
+
+	if(maxInd != root)
+	{
+		swap(arr[maxInd], arr[root]);
+
+		maxHeapify(arr, maxInd, maxInd * 2 + 1, maxInd * 2 + 2, heapSize);
+	}
+}
+
+```
+
+## Complexity
+
+Cả 3 case đều có time complexity là O(N * log(N)) (recursive): Có log2(N) tầng, mỗi tầng thực hiện N khối lượng công việc.
+
+UIT (tính đến HK1 2026-2027) không dạy iterative nên ta bỏ qua.
+
+Space: O(log(N)) đối với recursive.
