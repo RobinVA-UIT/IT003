@@ -139,9 +139,9 @@ Ascending:
 
 **B3**: Trong vòng lặp while, dùng thêm 2 vòng lặp while. 
 
-- Một vòng kiểm tra `arr[i]`, nếu bé hơn hoặc bằng pivot thì `i++`
+- Một vòng kiểm tra `arr[i]`, nếu bé hơn pivot thì `i++`
 
-- Một vòng kiểm tra `arr[j]`, nếu lớn hơn hoặc bằng pivot thì `j--`
+- Một vòng kiểm tra `arr[j]`, nếu lớn hơn pivot thì `j--`
 
 **B4**: Nếu `i` <= `j`, ta swap `arr[i]` và `arr[j]`, đồng thời `i++` và `j--`.
 
