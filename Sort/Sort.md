@@ -139,9 +139,9 @@ Ascending:
 
 **B3**: Trong vòng lặp while, dùng thêm 2 vòng lặp while. 
 
-- Một vòng kiểm tra `arr[i]`, nếu bé hơn hoặc bằng pivot thì `i++`
+- Một vòng kiểm tra `arr[i]`, nếu bé hơn pivot thì `i++`
 
-- Một vòng kiểm tra `arr[j]`, nếu lớn hơn hoặc bằng pivot thì `j--`
+- Một vòng kiểm tra `arr[j]`, nếu lớn hơn pivot thì `j--`
 
 **B4**: Nếu `i` <= `j`, ta swap `arr[i]` và `arr[j]`, đồng thời `i++` và `j--`.
 
@@ -357,56 +357,38 @@ Sau đó, thực hiện so sánh phần tử của 2 mảng nhỏ, thêm vào m�
 ```cpp
 //Ascending
 //left = 0, right = arr.size() - 1
-void topDownMerge(vector<int>& arr, int left, int right)
+//temp vector has the same size as arr
+void topDownMerge(vector<int>& arr, vector<int>& temp, int left, int right)
 {
 	if(left >= right) return;
 	int mid = left + (right - left)/2;
 
-	topDownMerge(arr, left, mid);
-	topDownMerge(arr, mid+1, right);
+	topDownMerge(arr, temp, left, mid);
+	topDownMerge(arr, temp, mid+1, right);
 
-	myMerge(arr, left, mid ,right);
+	myMerge(arr, temp,left, mid ,right);
 }
 
-void myMerge(vector<int>& arr, int left, int mid, int right)
+void myMerge(vector<int>& arr, vector<int>& temp, int left, int mid, int right)
 {
-	vector<int> leftArr;
-	vector<int> rightArr;
-	
-	int i = 0;
-	for(; i<mid+1, ++i)
-	{
-		leftArr.push_back(arr[i]);
-	}
+	if(left >= right) return;
 
-	for(; i<right+1; ++i)
-	{
-		rightArr.push_back(arr[i]);
-	}
+	int i = left, j = mid+1, k = left;
 
-	int leftInd = 0, rightInd = 0;
-	i = left;
-	while(leftInd < leftArr.size() && rightInd < rightArr.size())
-	{
-		if(leftArr[leftInd] < rightArr[rightInd])
-		{
-			arr[i] = leftArr[leftInd];
-			++i; ++leftInd;
+	while(i <= mid && j <= right){
+		if(arr[i] < arr[j]){
+			temp[k++] = arr[i++];
 		}
 		else{
-			arr[i] = rightArr[rightInd];
-			++i; ++rightInd;
+			temp[k++] = arr[j++];
 		}
 	}
 
-	for(leftInd < leftArr.size()){
-		arr[i] = leftArr[leftInd];
-		++i; ++leftInd;
-	}
+	while(i <= mid) temp[k++] = arr[i++];
+	while(j <= r) temp[k++] = arr[j++];
 
-	for(rightInd < rightArr.size()){
-		arr[i] = rightArr[rightInd];
-		++i; ++rightInd;
+	for(i = left; i < right+1; ++i){
+		arr[i] = temp[i];
 	}
 }
 ```
@@ -422,6 +404,8 @@ void iterativeMerge(vector<int>& arr)
 {
 	int n = arr.size();
 
+	vector<int> temp(n);
+
 	for(int windSize = 1; windSize < n; windSize *= 2)
 	{
 		//Do not iterate the last element, since there's nothing to merge behind
@@ -431,7 +415,7 @@ void iterativeMerge(vector<int>& arr)
 			int right = min(left + windSize*2 - 1, n - 1);
 
 			//myMerge func is the same as the one in recursive version
-			myMerge(arr, left, mid, right);
+			myMerge(arr, temp, left, mid, right);
 		}
 	}
 }
@@ -472,7 +456,7 @@ Lặp từ bước 2 đến bước 4 tổng cộng N/2 - 1 lần, vì node ở 
 
 - Giá trị của một node bất kỳ trên cây sẽ luôn lớn hơn hoặc bằng giá trị của các node con của nó (nếu có).
 
-### Max heap
+### Min heap
 - Cũng là cây nhị phân hoàn chỉnh.
 
 - Giá trị của một node bất kỳ trên cây sẽ luôn nhỏ hơn hoặc bằng giá trị của các node con của nó (nếu có).
