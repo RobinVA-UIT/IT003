@@ -161,70 +161,30 @@ void swap_node(linked_list& list, node* x, node* y) {
 
     node* prevY = prev;
 
-    // NOTE: DO NOT ADJUST PREVS' DATA, ONLY ADJUST PREVS' NEXT NODES
-    // Case 1: X is head
-    if (prevX == nullptr) {
-        // If X is adjacent to Y:
-        // X->next will be set to Y->Next
-        // Now Y is right before X, so Y->next = X
-        if (x->next == y) {
-            x->next = y->next;
-            y->next = x;
-        }
-        // If not adjacent:
-        // Swap X and Y's next nodes
-        // prevY->next now points to X
-        else {
-            node* temp = y->next;
-            y->next = x->next;
-            x->next = temp;
-
-            prevY->next = x;
-        }
-        // Update head
+    //**KEY: SWAPPING PREV AND NEXT OF EACH OTHER**
+    // Check prevX exists
+    if (prevX != nullptr) {
+        prevX->next = y;
+    } else {
         list.head = y;
     }
-    // Case 2: Y is head
-    else if (prevY == nullptr) {
-        // If Y is adjacent to X:
-        // Y->next = X->next
-        // Now X is right before Y, so X->next = Y
-        if (y->next == x) {
-            y->next = x->next;
-            x->next = y;
-        }
-        // Else
-        // Swap X and Y's next nodes
-        // prevX->next now points to Y
-        else {
-            node* temp = y->next;
-            y->next = x->next;
-            x->next = temp;
 
-            prevX->next = y;
-        }
-
-        // New head
+    // Check prevY exists
+    if (prevY != nullptr)
+        prevY->next = x;
+    else
         list.head = x;
 
-    }  // Case 3: Normal
-    // Just swap next node of X, Y and their prevs
-    else {
-        node* temp = prevX->next;
-        prevX->next = prevY->next;
-        prevY->next = temp;
-
-        temp = x->next;
-        x->next = y->next;
-        y->next = temp;
-    }
-
-    // Update tail if needed
-    if (x->next == nullptr) {
-        list.tail = x;
-    } else if (y->next == nullptr) {
+    // Setting new tail
+    if (x->next == nullptr)
         list.tail = y;
-    }
+    else if (y->next == nullptr)
+        list.tail = x;
+
+    // Swap next of each other
+    node* temp = x->next;
+    x->next = y->next;
+    y->next = temp;
 }
 
 // Ascending
